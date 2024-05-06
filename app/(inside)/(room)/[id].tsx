@@ -40,23 +40,17 @@ const Page = () => {
 
     // Listen to call events
     const unsubscribe = client!.on('all', (event: StreamVideoEvent) => {
-      console.log(event);
-
       if (event.type === 'call.reaction_new') {
         console.log(`New reaction: ${event.reaction}`);
       }
-
       if (event.type === 'call.session_participant_joined') {
-        console.log(`New user joined the call: ${event.participant}`);
         const user = event.participant.user.name;
         Toast.show({
           text1: 'User joined',
           text2: `Say hello to ${user} 👋`,
         });
       }
-
       if (event.type === 'call.session_participant_left') {
-        console.log(`Someone left the call: ${event.participant}`);
         const user = event.participant.user.name;
         Toast.show({
           text1: 'User left',
@@ -64,17 +58,12 @@ const Page = () => {
         });
       }
     });
-
-    // Stop the listener when the component unmounts
     return () => {
       unsubscribe();
     };
   }, []);
-
-  // Join the call
   useEffect(() => {
     if (!client || call) return;
-
     const joinCall = async () => {
       const call = client!.call('default', id);
       await call.join({ create: true });
@@ -101,7 +90,6 @@ const Page = () => {
   return (
     <View style={{ flex: 1 }}>
       <Spinner visible={!call} />
-
       <StreamCall call={call}>
         <View style={styles.container}>
           <CallContent
@@ -111,7 +99,6 @@ const Page = () => {
             supportedReactions={reactions}
             layout="grid"
           />
-
           {WIDTH > HEIGHT ? (
             <View style={styles.videoContainer}>
               <ChatView channelId={id} />
@@ -136,7 +123,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: '#fff',
   },
-
   topView: {
     flex: 1,
     justifyContent: 'center',
